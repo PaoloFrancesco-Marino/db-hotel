@@ -1,0 +1,67 @@
+Sempre utilizzando phpMyAdmin, come fatto per l’esercizio di ieri eseguire le seguenti queries:
+
+Come si chiamano gli ospiti che hanno fatto più di due prenotazioni?
+SELECT COUNT(`prenotazioni_has_ospiti`.`ospite_id`) AS `total-reservations`, `prenotazioni_has_ospiti`.`ospite_id`, `ospiti`.`name`,`ospiti`.`lastname` FROM `prenotazioni_has_ospiti` 
+INNER JOIN `ospiti` 
+ON `prenotazioni_has_ospiti`.`ospite_id` = `ospiti`.`id` 
+GROUP BY `prenotazioni_has_ospiti`.`ospite_id` 
+HAVING COUNT(`prenotazioni_has_ospiti`.`ospite_id`) > 2;
+
+
+
+Stampare tutti gli ospiti per ogni prenotazione
+SELECT `ospiti`.`name`,`ospiti`.`lastname`, `date_of_birth`, `prenotazioni_has_ospiti`.`prenotazione_id`
+FROM `ospiti`
+INNER JOIN `prenotazioni_has_ospiti`
+ON `prenotazioni_has_ospiti`.`ospite_id` = `ospiti`.`id`;
+
+
+
+Stampare Nome, Cognome, Prezzo e Pagante per tutte le prenotazioni fatte a Maggio 2018
+SELECT `paganti`.name, `paganti`.`lastname`, `paganti`.`created_at` AS 'data_prenotazione', `pagamenti`.`price` AS 'Prezzo'
+FROM `paganti`
+INNER JOIN `ospiti` 
+ON `paganti`.`ospite_id` = `ospiti`.`id`
+INNER JOIN `pagamenti`
+ON `pagamenti`.`pagante_id` = `paganti`.`id`
+WHERE `paganti`.`created_at` BETWEEN '2018-05-01' AND '2018-05-31'  
+ORDER BY `data_prenotazione`  ASC;
+
+
+
+Fai la somma di tutti i prezzi delle prenotazioni per le stanze del primo piano
+SELECT SUM(`price`) AS `total price`, `stanze`.`floor`
+FROM `pagamenti`
+INNER JOIN `prenotazioni`
+ON `prenotazioni`.`id` = `pagamenti`.`prenotazione_id`
+INNER JOIN `stanze`
+ON `stanze`.`id` = `prenotazioni`.`stanza_id`
+WHERE `stanze`.`floor`= "1";
+
+
+
+Le stanze sono state tutte prenotate almeno una volta? (Visualizzare le stanze non ancora prenotate)
+
+
+
+Salvare le query che ritenete corrette (una per ogni punto elencato sopra) in un file da versionare sempre nella repo usata anche per l’esercizio di ieri (db-hotel). Create un nuovo file per tenere separate le queries di ieri a quelle che farete oggi.
+
+Bonus: Group by
+Conta gli ospiti raggruppandoli per anno di nascita
+SELECT COUNT(`id`) as `ospiti`, YEAR(`date_of_birth`) AS 'date of birth'
+FROM `ospiti`
+GROUP BY YEAR(`date_of_birth`)
+
+Somma i prezzi dei pagamenti raggruppandoli per status
+SELECT SUM(`price`) as `total payments`,`status`
+FROM `pagamenti`
+GROUP BY `status`
+
+
+Quante prenotazioni ha fatto l’ospite che ha fatto più prenotazioni?
+SELECT `ospite_id`, COUNT(`prenotazione_id`)
+FROM `prenotazioni_has_ospiti`
+GROUP BY `ospite_id`
+HAVING COUNT(`prenotazione_id`) > 1  
+ORDER BY `COUNT(``prenotazione_id``)`  DESC
+LIMIT 1

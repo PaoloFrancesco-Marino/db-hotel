@@ -14,8 +14,8 @@ ORDER BY `date_of_birth` ASC;
 Seleziona tutti gli ospiti che hanno più di 20 anni (al momento dell’esecuzione della query)
 SELECT `name`, `lastname`,`date_of_birth` 
 FROM `ospiti` 
-WHERE YEAR(`date_of_birth`) < YEAR(CURRENT_DATE()) - 20
-ORDER BY `date_of_birth` ASC;
+WHERE `date_of_birth` < DATE_SUB(CURRENT_DATE(), INTERVAL 20 YEAR) 
+ORDER BY `date_of_birth` ASC; 
 
 
 Seleziona tutti gli ospiti il cui nome inizia con la D
@@ -34,14 +34,17 @@ WHERE `status` = 'accepted';
 
 Qual è il prezzo massimo pagato?
 SELECT MAX(`price`) as `max price pay` 
-FROM `pagamenti`;
+FROM `pagamenti`
+WHERE `status` = 'accepted';
+
 
 
 
 Seleziona gli ospiti riconosciuti con patente e nati nel 1975
 SELECT `name`, `lastname`, `date_of_birth`, `document_type`
 FROM `ospiti`
-WHERE `document_type` = 'Driver License' AND YEAR(`date_of_birth`) = '1975'
+WHERE `document_type` = 'Driver License' 
+AND YEAR(`date_of_birth`) = '1975'
 ORDER BY `date_of_birth` ASC;
 
 
