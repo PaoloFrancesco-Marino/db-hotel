@@ -1,7 +1,8 @@
 Sempre utilizzando phpMyAdmin, come fatto per l’esercizio di ieri eseguire le seguenti queries:
 
 Come si chiamano gli ospiti che hanno fatto più di due prenotazioni?
-SELECT COUNT(`prenotazioni_has_ospiti`.`ospite_id`) AS `total-reservations`, `prenotazioni_has_ospiti`.`ospite_id`, `ospiti`.`name`,`ospiti`.`lastname` FROM `prenotazioni_has_ospiti` 
+SELECT COUNT(`prenotazioni_has_ospiti`.`ospite_id`) AS `total-reservations`, `prenotazioni_has_ospiti`.`ospite_id`, `ospiti`.`name`,`ospiti`.`lastname` 
+FROM `prenotazioni_has_ospiti` 
 INNER JOIN `ospiti` 
 ON `prenotazioni_has_ospiti`.`ospite_id` = `ospiti`.`id` 
 GROUP BY `prenotazioni_has_ospiti`.`ospite_id` 
@@ -41,6 +42,12 @@ WHERE `stanze`.`floor`= "1";
 
 
 Le stanze sono state tutte prenotate almeno una volta? (Visualizzare le stanze non ancora prenotate)
+SELECT `stanze`.`room_number` as 'stanza non ancora prenotata', `stanze`.`room_number`
+FROM `stanze` 
+LEFT JOIN `prenotazioni`
+ON `stanze`.`id` = `prenotazioni`.`stanza_id`
+WHERE `prenotazioni`.`id` IS NULL
+
 
 
 
